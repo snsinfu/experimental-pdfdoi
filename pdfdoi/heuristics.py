@@ -5,6 +5,7 @@ DOI_REGEX = r"doi[:/]?\s*(\d+\.\d+/[a-z0-9-._;()/]+)"
 DOIURL_REGEX = r"doi.org/(\d+\.\d+/[a-z0-9-._;()/]+)"
 ARXIV_REGEX = r"arxiv:(\d+\.\d+)"
 
+# FIXME: Add more cases like unmatched parens.
 DOI_GARBAGE_REGEXES = [
     r"\.$",
     r";publishedonline.*$",
