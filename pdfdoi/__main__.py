@@ -1,8 +1,10 @@
 import argparse
 import signal
+import time
 
 from . import heuristics
 from . import pdf
+from . import crossref
 
 
 def main():
@@ -11,11 +13,15 @@ def main():
     return run(**parse_args())
 
 
-def run(files, max_page, space_tol):
+def run(files, max_page, space_tol, bibtex):
     for path in files:
         with open(path, "rb") as file:
             article_id = extract_article_id(file, max_page, space_tol) or "?"
-        print(f"{article_id}\t{path}")
+
+        if bibtex:
+            print_bibtex(article_id)
+        else:
+            print(f"{article_id}\t{path}")
 
 
 def parse_args():
@@ -32,8 +38,19 @@ def parse_args():
         default=1,
         help="specify tolerable margin between fragmented text objects (default: 1)",
     )
+    parser.add_argument(
+        "--bibtex",
+        action="store_true",
+        default=False,
+        help="query DOI for CrossRef server and output bibtex instead of DOI"
+    )
     parser.add_argument("files", type=str, nargs="*")
     return vars(parser.parse_args())
+
+
+def print_bibtex(doi):
+    time.sleep(1)
+    print(crossref.query_bibtex(doi))
 
 
 def extract_article_id(file, max_page, space_tol):
